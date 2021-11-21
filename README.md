@@ -1,4 +1,4 @@
-# ebert-api
+# explogger
 
 A node library for logging requests and responses of express endpoints using middleware
 
