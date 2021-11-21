@@ -1,5 +1,5 @@
 {
-  "name": "express-logger",
+  "name": "explogger",
   "version": "1.0.0",
   "description": "Logger for express",
   "main": "dist/index.js",
