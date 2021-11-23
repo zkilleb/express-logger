@@ -32,9 +32,9 @@ export function middlewareLogger(options: IConfig) {
         let body = Buffer.concat(chunks).toString('utf8');
 
         if (options.includeRes) {
-          resLine = `${dayjs().format(options.dateFormat ? options.dateFormat : 'MM-DD-YYYY T HH:mm:ss')} RESPONSE: ${
-            res.statusCode
-          } ${body}`;
+          resLine = `${dayjs().format(
+            options.dateFormat ? options.dateFormat : 'MM-DD-YYYY T HH:mm:ss',
+          )} RESPONSE: ${res.statusCode} ${body}`;
         }
         oldEnd.apply(res, arguments);
         fs.appendFile(
@@ -52,22 +52,22 @@ export function middlewareLogger(options: IConfig) {
   };
 }
 
-function prepareReqLogLine(req: any, options: IConfig) {
+export function prepareReqLogLine(req: any, options: IConfig) {
   let reqLine = '';
   if (options.includeReq) {
-    reqLine = `${dayjs().format(options.dateFormat ? options.dateFormat : 'MM-DD-YYYY T HH:mm:ss')} REQUEST: ${
-      req.method
-    } ${req.url} ${
+    reqLine = `${dayjs().format(
+      options.dateFormat ? options.dateFormat : 'MM-DD-YYYY T HH:mm:ss',
+    )} REQUEST: ${req.method} ${req.url} ${
       req.params && Object.keys(req.params).length !== 0
-        ? `params: ${req.params.toString()}`
+        ? `params: ${JSON.stringify(req.params)}`
         : ''
     } ${
       req.query && Object.keys(req.query).length !== 0
-        ? `query: ${req.query.toString()}`
+        ? `query: ${JSON.stringify(req.query)}`
         : ''
     } ${
       req.body && Object.keys(req.body).length !== 0
-        ? `body: ${req.body.toString()}`
+        ? `body: ${JSON.stringify(req.body)}`
         : ''
     }\n`;
   }
