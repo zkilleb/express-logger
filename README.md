@@ -5,7 +5,7 @@ A node library for logging requests and responses of express endpoints using mid
 ## Usage
 
 ```javascript
-import { middlewareLogger } from 'express-logger';
+import { middlewareLogger } from 'explogger';
 
 app.use(
   middlewareLogger({
