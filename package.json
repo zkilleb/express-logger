@@ -1,10 +1,11 @@
 {
   "name": "explogger",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Logger for express",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/zkilleb/express-logger",
+  "keywords": ["express", "logging", "middleware", "logger"],
   "scripts": {
     "build": "tsc",
     "prettier": "prettier --write ./src/**/*.{js,ts}",
