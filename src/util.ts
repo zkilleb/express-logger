@@ -1,19 +1,25 @@
 import * as fs from 'fs';
 import dayjs from 'dayjs';
 
-export function middlewareLogger(options: IConfig) {
+export function middlewareLogger({
+  filename,
+  filepath,
+  dateFormat,
+  includeReq = true,
+  includeRes = true,
+}: IConfig) {
   return (req: any, res: any, next: any) => {
-    const filename = options.filename
-      ? `${dayjs().format('MM-DD-YYYY')}-${options.filename}`
-      : `logfile-${dayjs().format('MM-DD-YYYY')}.txt`;
-    let filepath = '';
-    if (options.filepath) {
-      if (options.filepath[options.filepath.length - 1] !== '/')
-        filepath = `${options.filepath}/`;
-      else filepath = options.filepath;
+    const formattedFilename = filename
+      ? `${dayjs().format('MM-DD-YYYY')}-${filename}`
+      : `${dayjs().format('MM-DD-YYYY')}-logfile.txt`;
+    let formattedFilepath = '';
+    if (filepath) {
+      if (filepath[filepath.length - 1] !== '/')
+        formattedFilepath = `${filepath}/`;
+      else formattedFilepath = filepath;
     }
     try {
-      const reqResult = prepareReqLogLine(req, options);
+      const reqResult = prepareReqLogLine(req, dateFormat, includeReq);
       let resLine = '';
       let oldWrite = res.write;
       let oldEnd = res.end;
@@ -31,14 +37,14 @@ export function middlewareLogger(options: IConfig) {
 
         let body = Buffer.concat(chunks).toString('utf8');
 
-        if (options.includeRes) {
+        if (includeRes) {
           resLine = `${dayjs().format(
-            options.dateFormat ? options.dateFormat : 'MM-DD-YYYY T HH:mm:ss',
-          )} RESPONSE: ${res.statusCode} ${body}`;
+            dateFormat ? dateFormat : 'MM-DD-YYYY T HH:mm:ss',
+          )} RESPONSE: ${res.statusCode} ${body}\n`;
         }
         oldEnd.apply(res, arguments);
         fs.appendFile(
-          `${filepath}${filename}`,
+          `${formattedFilepath}${formattedFilename}`,
           `${reqResult}${resLine}`,
           (err) => {
             if (err) console.error(err);
@@ -52,11 +58,15 @@ export function middlewareLogger(options: IConfig) {
   };
 }
 
-export function prepareReqLogLine(req: any, options: IConfig) {
+export function prepareReqLogLine(
+  req: any,
+  dateFormat?: string,
+  includeReq?: boolean,
+) {
   let reqLine = '';
-  if (options.includeReq) {
+  if (includeReq) {
     reqLine = `${dayjs().format(
-      options.dateFormat ? options.dateFormat : 'MM-DD-YYYY T HH:mm:ss',
+      dateFormat ? dateFormat : 'MM-DD-YYYY T HH:mm:ss',
     )} REQUEST: ${req.method} ${req.url} ${
       req.params && Object.keys(req.params).length !== 0
         ? `params: ${JSON.stringify(req.params)}`

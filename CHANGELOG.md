@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 2.0.1
+
+### Features:
+
+- None
+
+### Bugfixes:
+
+- Add newline between request and response
+
+## 2.0.0
+
+### Features:
+
+- Update configuration to default `includeReq` and `includeRes` to be true instead of false. Update README to reflect change
+- Update default logfile name to match provided name format
+
+### Bugfixes:
+
+- Update all packages to current versions, removing all current vulnerabilities
+
 ## 1.1.1
 
 ### Features:

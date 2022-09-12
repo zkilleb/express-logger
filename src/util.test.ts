@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 describe('Test prepareReqLogLine()', () => {
   test('prepareReqLogLine without request', () => {
-    expect(prepareReqLogLine({}, { includeReq: false })).toEqual('');
+    expect(prepareReqLogLine({}, undefined, false)).toEqual('');
   });
 
   test('prepareReqLogLine without params, query or body', () => {
@@ -12,7 +12,7 @@ describe('Test prepareReqLogLine()', () => {
       method: 'GET',
       query: {},
     };
-    expect(prepareReqLogLine(testObj, { includeReq: true })).toEqual(
+    expect(prepareReqLogLine(testObj, undefined, true)).toEqual(
       `${dayjs().format(
         'MM-DD-YYYY T HH:mm:ss',
       )} REQUEST: GET /tests/test   \n`,
@@ -26,7 +26,7 @@ describe('Test prepareReqLogLine()', () => {
       params: { title: 'test' },
       query: {},
     };
-    expect(prepareReqLogLine(testObj, { includeReq: true })).toEqual(
+    expect(prepareReqLogLine(testObj, undefined, true)).toEqual(
       `${dayjs().format(
         'MM-DD-YYYY T HH:mm:ss',
       )} REQUEST: GET /tests/test params: {"title":"test"}  \n`,
@@ -40,7 +40,7 @@ describe('Test prepareReqLogLine()', () => {
       params: { title: 'test' },
       query: { query: 'query' },
     };
-    expect(prepareReqLogLine(testObj, { includeReq: true })).toEqual(
+    expect(prepareReqLogLine(testObj, undefined, true)).toEqual(
       `${dayjs().format(
         'MM-DD-YYYY T HH:mm:ss',
       )} REQUEST: GET /tests/test params: {"title":"test"} query: {"query":"query"} \n`,
@@ -55,10 +55,24 @@ describe('Test prepareReqLogLine()', () => {
       query: { query: 'query' },
       body: { body: 'body' },
     };
-    expect(prepareReqLogLine(testObj, { includeReq: true })).toEqual(
+    expect(prepareReqLogLine(testObj, undefined, true)).toEqual(
       `${dayjs().format(
         'MM-DD-YYYY T HH:mm:ss',
       )} REQUEST: GET /tests/test params: {"title":"test"} query: {"query":"query"} body: {"body":"body"}\n`,
+    );
+  });
+
+  test('prepareReqLogLine with different date format', () => {
+    const testObj = {
+      url: '/tests/test',
+      method: 'GET',
+      params: { title: 'test' },
+      query: { query: 'query' },
+    };
+    expect(prepareReqLogLine(testObj, 'MM-DD-YYYY', true)).toEqual(
+      `${dayjs().format(
+        'MM-DD-YYYY',
+      )} REQUEST: GET /tests/test params: {"title":"test"} query: {"query":"query"} \n`,
     );
   });
 });
