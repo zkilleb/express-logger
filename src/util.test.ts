@@ -1,4 +1,4 @@
-import { prepareReqLogLine } from './util';
+import { prepareFilename, prepareReqLogLine } from './util';
 import dayjs from 'dayjs';
 
 describe('Test prepareReqLogLine()', () => {
@@ -73,6 +73,26 @@ describe('Test prepareReqLogLine()', () => {
       `${dayjs().format(
         'MM-DD-YYYY',
       )} REQUEST: GET /tests/test params: {"title":"test"} query: {"query":"query"} \n`,
+    );
+  });
+});
+
+describe('Test prepareFilename()', () => {
+  test('prepareFilename without name or extension', () => {
+    expect(prepareFilename()).toEqual(
+      `${dayjs().format('MM-DD-YYYY')}-logfile.log`,
+    );
+  });
+
+  test('prepareFilename with name', () => {
+    expect(prepareFilename('testfile')).toEqual(
+      `${dayjs().format('MM-DD-YYYY')}-testfile.log`,
+    );
+  });
+
+  test('prepareFilename with name and extension', () => {
+    expect(prepareFilename('testfile', '.txt')).toEqual(
+      `${dayjs().format('MM-DD-YYYY')}-testfile.txt`,
     );
   });
 });
