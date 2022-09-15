@@ -10,9 +10,6 @@ export function middlewareLogger({
   outputFormat,
 }: IConfig = {}) {
   return (req: any, res: any, next: any) => {
-    // let formattedFilename = filename
-    //   ? `${dayjs().format('MM-DD-YYYY')}-${filename}${outputFormat ? outputFormat : '.log'}`
-    //   : `${dayjs().format('MM-DD-YYYY')}-logfile${outputFormat ? outputFormat : '.log'}`;
     const formattedFilename = prepareFilename(filename, outputFormat);
     let formattedFilepath = '';
     if (filepath) {
