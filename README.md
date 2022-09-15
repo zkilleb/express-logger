@@ -13,6 +13,7 @@ app.use(
     includeReq: true,
     includeRes: true,
     dateFormat: 'MM-YYYY',
+    outputFormat: '.log',
   }),
 );
 ```
@@ -30,6 +31,8 @@ The contents of the provided middlewareLogger can be modified to get different c
 `includeRes`: Boolean to determine whether to include the respone as part of the log. Defaults to true.
 
 `dateFormat`: String to determine how to format the dates for the logfile. [Any valid DayJs formatting option will work](https://day.js.org/docs/en/display/format). Will default to `MM-DD-YYYY T HH:mm:ss`.
+
+`outputFormat`: String name of desired file extension type of logfile. (e.g., .log, .txt). Extension will default to `.log` if no value is provided.
 
 **Example output**
 

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.1.0
+
+### Features:
+
+- Add configuration option to select output file extension type
+
+### Bugfixes:
+
+- Add file extension type when default filename is selected
+
 ## 2.0.1
 
 ### Features:
