@@ -34,6 +34,8 @@ The contents of the provided middlewareLogger can be modified to get different c
 
 `outputFormat`: String name of desired file extension type of logfile. (e.g., .log, .txt). Extension will default to `.log` if no value is provided.
 
+`consoleOnly`: Boolean value to log to the console instead of a file. Will override file output if set to true.
+
 **Example output**
 
 ```

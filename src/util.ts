@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import dayjs from 'dayjs';
+import { colors } from './colors';
 
 export function middlewareLogger({
   filename,
@@ -8,6 +9,7 @@ export function middlewareLogger({
   includeReq = true,
   includeRes = true,
   outputFormat,
+  consoleOnly,
 }: IConfig = {}) {
   return (req: any, res: any, next: any) => {
     const formattedFilename = prepareFilename(filename, outputFormat);
@@ -39,16 +41,22 @@ export function middlewareLogger({
         if (includeRes) {
           resLine = `${dayjs().format(
             dateFormat ? dateFormat : 'MM-DD-YYYY T HH:mm:ss',
-          )} RESPONSE: ${res.statusCode} ${body}\n`;
+          )} RESPONSE: ${res.statusCode} ${body}`;
         }
         oldEnd.apply(res, arguments);
-        fs.appendFile(
-          `${formattedFilepath}${formattedFilename}`,
-          `${reqResult}${resLine}`,
-          (err) => {
-            if (err) console.error(err);
-          },
-        );
+        if (consoleOnly) {
+          colorLogToConsole(reqResult, resLine);
+        } else {
+          fs.appendFile(
+            `${formattedFilepath}${formattedFilename}`,
+            `${reqResult}${
+              reqResult !== '' && resLine !== '' ? '\n' : ''
+            }${resLine}\n`,
+            (err) => {
+              if (err) console.error(err);
+            },
+          );
+        }
       };
     } catch (e) {
       console.error(e);
@@ -78,7 +86,7 @@ export function prepareReqLogLine(
       req.body && Object.keys(req.body).length !== 0
         ? `body: ${JSON.stringify(req.body)}`
         : ''
-    }\n`;
+    }`;
   }
   return reqLine;
 }
@@ -89,6 +97,27 @@ export function prepareFilename(filename?: string, outputFormat?: string) {
   }`;
 }
 
+export function colorLogToConsole(req: string, res: string) {
+  let logOutput: string[] = [];
+  if (req !== '') logOutput.push(' ' + req + '\n');
+  if (res !== '') {
+    const splitRes = res.split(/(RESPONSE:)/g);
+    logOutput.push(splitRes[0] + splitRes[1]);
+    const statusCode = splitRes[2].slice(0, 4);
+    if (statusCode[1] === '2' || statusCode[1] === '1') {
+      logOutput.push(colors.green);
+    } else if (statusCode[1] === '3') {
+      logOutput.push(colors.yellow);
+    } else if (statusCode[1] === '4' || statusCode[1] === '5') {
+      logOutput.push(colors.red);
+    }
+    logOutput.push(statusCode.trim());
+    logOutput.push(colors.reset);
+    logOutput.push(`${splitRes[2].replace(statusCode, '')}\n`);
+  }
+  console.log(...logOutput, colors.reset);
+}
+
 interface IConfig {
   filename?: string;
   filepath?: string;
@@ -96,4 +125,5 @@ interface IConfig {
   includeReq?: boolean;
   includeRes?: boolean;
   outputFormat?: string;
+  consoleOnly?: boolean;
 }

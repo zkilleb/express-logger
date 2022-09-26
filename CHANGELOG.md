@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.2.0
+
+### Features:
+
+- Add configuration option to output logs to console instead of file
+
+### Bugfixes:
+
+- None
+
 ## 2.1.0
 
 ### Features:
